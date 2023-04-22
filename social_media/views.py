@@ -116,9 +116,25 @@ class FollowingList(generics.ListAPIView):
 ##############################################################################
 
 
-class PostListView(generics.ListCreateAPIView, GenericViewSet):
+class PostListView(generics.ListCreateAPIView, generics.RetrieveAPIView, GenericViewSet):
+
+    @staticmethod
+    def _params_to_ints(qs):
+        """Converts a list of string IDs to a list of integers"""
+        return [int(str_id) for str_id in qs.split(",")]
+
     def get_queryset(self):
         queryset = Post.objects.all()
+        hashtag = self.request.query_params.get("hashtag")
+        content = self.request.query_params.get("content")
+        authors = self.request.query_params.get("author")
+        if hashtag:
+            queryset = queryset.filter(hashtag__icontains=hashtag)
+        if content:
+            queryset = queryset.filter(content__icontains=content)
+        if authors:
+            authors_id = self._params_to_ints(authors)
+            queryset = queryset.filter(author_id__in=authors_id)
         return queryset
 
     def get_serializer_class(self):
@@ -137,7 +153,6 @@ class PostListFollowingView(APIView):
         posts = Post.objects.filter(author_id__in=following_ids)
         serializer = PostListSerializer(posts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView, GenericViewSet):

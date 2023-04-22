@@ -78,17 +78,27 @@ class RelationshipDestroySerializer(serializers.ModelSerializer):
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id', 'content', 'image',)
+        fields = ('id', 'content', 'image', "hashtag",)
+
+    def to_internal_value(self, data):
+        data = data.copy()
+        if 'hashtag' in data:
+            hashtag = data['hashtag']
+            if not hashtag.startswith('#'):
+                hashtag = f"#{hashtag}"
+            data['hashtag'] = hashtag
+        return super().to_internal_value(data)
 
 
 class PostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ("id", "content", "image",)
+        fields = ("id", "content", "author", "image", "hashtag",)
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ("id", "content", "image",)
+        fields = ("id", "content", "image", "hashtag",)
 
+############################################################################

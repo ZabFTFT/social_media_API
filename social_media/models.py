@@ -24,7 +24,6 @@ class UserProfile(models.Model):
     photo_image = models.ImageField(null=True, upload_to=get_image_file_name, default="")
 
 
-
 class Relationship(models.Model):
     follower = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
     following = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
@@ -38,6 +37,7 @@ class Post(models.Model):
     content = models.TextField()
     image = models.FileField(blank=True, null=True, upload_to='uploads/')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    hashtag = models.CharField(max_length=15, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
 
