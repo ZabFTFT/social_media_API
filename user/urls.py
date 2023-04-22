@@ -1,10 +1,13 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, \
-    TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 from user.views import CreateUserView, ManageUserView
 
-#TODO: Users should be able to logout and invalidate their token.
+# TODO: Users should be able to logout and invalidate their token.
 
 
 urlpatterns = [

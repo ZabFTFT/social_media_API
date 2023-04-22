@@ -5,19 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('social_media', '0010_remove_userprofile_following_userfollowing_and_more'),
+        (
+            "social_media",
+            "0010_remove_userprofile_following_userfollowing_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='following',
-            field=models.ManyToManyField(related_name='followers', to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="following",
+            field=models.ManyToManyField(
+                related_name="followers", to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.DeleteModel(
-            name='UserFollowing',
+            name="UserFollowing",
         ),
     ]

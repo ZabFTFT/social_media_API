@@ -32,7 +32,6 @@ class UserProfileCreateSerializer(serializers.ModelSerializer):
 
 
 class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserProfile
         fields = "__all__"
@@ -48,57 +47,72 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 class UserProfilePhotoImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("id", "photo_image",)
-
-##############################################################################
+        fields = (
+            "id",
+            "photo_image",
+        )
 
 
 class RelationShipRetrieveSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Relationship
-        fields = ("created_at", "following",)
+        fields = (
+            "created_at",
+            "following",
+        )
         read_only = "__all__"
 
 
 class RelationshipCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relationship
-        fields = ('id', 'following', 'created_at')
+        fields = ("id", "following", "created_at")
 
 
 class RelationshipDestroySerializer(serializers.ModelSerializer):
     class Meta:
         model = Relationship
-        fields = ('id', 'following', "follower", 'created_at')
+        fields = ("id", "following", "follower", "created_at")
 
-
-##############################################################################
 
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id', 'content', 'image', "hashtag",)
+        fields = (
+            "id",
+            "content",
+            "image",
+            "hashtag",
+        )
 
     def to_internal_value(self, data):
         data = data.copy()
-        if 'hashtag' in data:
-            hashtag = data['hashtag']
-            if not hashtag.startswith('#'):
+        if "hashtag" in data:
+            hashtag = data["hashtag"]
+            if not hashtag.startswith("#"):
                 hashtag = f"#{hashtag}"
-            data['hashtag'] = hashtag
+            data["hashtag"] = hashtag
         return super().to_internal_value(data)
 
 
 class PostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ("id", "content", "author", "image", "hashtag",)
+        fields = (
+            "id",
+            "content",
+            "author",
+            "image",
+            "hashtag",
+        )
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ("id", "content", "image", "hashtag",)
-
-############################################################################
+        fields = (
+            "id",
+            "content",
+            "image",
+            "hashtag",
+        )

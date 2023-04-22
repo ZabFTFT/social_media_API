@@ -20,8 +20,11 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("app/user/", include("user.urls", namespace="user")),
-    path("app/social_media/", include("social_media.urls", namespace="social_media")),
+    path(
+        "app/social_media/",
+        include("social_media.urls", namespace="social_media"),
+    ),
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

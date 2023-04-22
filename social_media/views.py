@@ -1,10 +1,9 @@
-from django.contrib.auth import get_user_model
-from django.shortcuts import render
-from rest_framework import generics, mixins, status, viewsets
+
+from rest_framework import generics, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from social_media.models import UserProfile, Relationship, Post
 from social_media.serializers import (
@@ -19,7 +18,6 @@ from social_media.serializers import (
     PostListSerializer,
     PostCreateSerializer,
     PostDetailSerializer,
-
 )
 
 
@@ -50,8 +48,6 @@ class UserProfileView(
     GenericViewSet,
 ):
 
-    # TODO: Split different Serializer to different functions
-
     def get_object(self):
         return self.request.user.profile
 
@@ -72,7 +68,6 @@ class UserProfileView(
         url_path="upload-image",
     )
     def upload_image(self, request, pk=None):
-        """Endpoint for uploading image to specific movie"""
         userprofile = self.get_object()
         serializer = self.get_serializer(userprofile, data=request.data)
 
@@ -81,8 +76,6 @@ class UserProfileView(
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-##############################################################################
 
 
 class FollowUser(generics.CreateAPIView):
@@ -95,7 +88,7 @@ class FollowUser(generics.CreateAPIView):
 class UnfollowUser(generics.DestroyAPIView):
     queryset = Relationship.objects.all()
     serializer_class = RelationshipDestroySerializer
-    lookup_field = 'following__id'
+    lookup_field = "following__id"
 
 
 class FollowersList(generics.ListAPIView):
@@ -113,11 +106,10 @@ class FollowingList(generics.ListAPIView):
         user = self.request.user
         return Relationship.objects.filter(follower=user)
 
-##############################################################################
 
-
-class PostListView(generics.ListCreateAPIView, generics.RetrieveAPIView, GenericViewSet):
-
+class PostListView(
+    generics.ListCreateAPIView, generics.RetrieveAPIView, GenericViewSet
+):
     @staticmethod
     def _params_to_ints(qs):
         """Converts a list of string IDs to a list of integers"""
@@ -149,7 +141,9 @@ class PostListView(generics.ListCreateAPIView, generics.RetrieveAPIView, Generic
 class PostListFollowingView(APIView):
     def get(self, request):
         user_followings = Relationship.objects.filter(follower=request.user)
-        following_ids = [user_following.following_id for user_following in user_followings]
+        following_ids = [
+            user_following.following_id for user_following in user_followings
+        ]
         posts = Post.objects.filter(author_id__in=following_ids)
         serializer = PostListSerializer(posts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

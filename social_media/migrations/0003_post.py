@@ -8,7 +8,10 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("social_media", "0002_remove_userprofile_user_userprofile_username_and_more"),
+        (
+            "social_media",
+            "0002_remove_userprofile_user_userprofile_username_and_more",
+        ),
     ]
 
     operations = [
@@ -27,7 +30,9 @@ class Migration(migrations.Migration):
                 ("content", models.TextField()),
                 (
                     "image",
-                    models.FileField(blank=True, null=True, upload_to="uploads/"),
+                    models.FileField(
+                        blank=True, null=True, upload_to="uploads/"
+                    ),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (

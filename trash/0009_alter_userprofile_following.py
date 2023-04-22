@@ -5,16 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('social_media', '0008_alter_userprofile_following'),
+        ("social_media", "0008_alter_userprofile_following"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='following',
-            field=models.ManyToManyField(default=[], related_name='followers', to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="following",
+            field=models.ManyToManyField(
+                default=[],
+                related_name="followers",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

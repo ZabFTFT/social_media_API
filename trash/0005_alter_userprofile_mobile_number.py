@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('social_media', '0004_userprofile_user'),
+        ("social_media", "0004_userprofile_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='mobile_number',
+            model_name="userprofile",
+            name="mobile_number",
             field=models.SmallIntegerField(null=True),
         ),
     ]

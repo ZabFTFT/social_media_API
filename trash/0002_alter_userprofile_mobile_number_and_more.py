@@ -5,20 +5,23 @@ import social_media.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('social_media', '0001_initial'),
+        ("social_media", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='mobile_number',
-            field=models.SmallIntegerField(default=''),
+            model_name="userprofile",
+            name="mobile_number",
+            field=models.SmallIntegerField(default=""),
         ),
         migrations.AlterField(
-            model_name='userprofile',
-            name='photo_image',
-            field=models.ImageField(default='', null=True, upload_to=social_media.models.get_image_file_name),
+            model_name="userprofile",
+            name="photo_image",
+            field=models.ImageField(
+                default="",
+                null=True,
+                upload_to=social_media.models.get_image_file_name,
+            ),
         ),
     ]

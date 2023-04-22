@@ -6,17 +6,20 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('social_media', '0003_remove_userprofile_user'),
+        ("social_media", "0003_remove_userprofile_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='user',
-            field=models.OneToOneField(default=1, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="user",
+            field=models.OneToOneField(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
             preserve_default=False,
         ),
     ]

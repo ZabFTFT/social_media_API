@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('social_media', '0002_alter_userprofile_mobile_number_and_more'),
+        ("social_media", "0002_alter_userprofile_mobile_number_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='userprofile',
-            name='user',
+            model_name="userprofile",
+            name="user",
         ),
     ]
