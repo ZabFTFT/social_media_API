@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     photo_image = models.ImageField(null=True, upload_to=get_image_file_name, default="")
 
 
+
 class Relationship(models.Model):
     follower = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
     following = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)

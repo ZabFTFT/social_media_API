@@ -5,13 +5,17 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from social_media.models import UserProfile
+from social_media.models import UserProfile, Relationship
 from social_media.serializers import (
     UserProfilePhotoImageSerializer,
     UserProfileCreateSerializer,
     UserProfileRetrieveSerializer,
     UserProfileUpdateSerializer,
     UserProfileListSerializer,
+    RelationshipCreateSerializer,
+    RelationShipRetrieveSerializer,
+    RelationshipDestroySerializer,
+
 )
 
 
@@ -73,6 +77,37 @@ class UserProfileView(
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+##############################################################################
+
+
+class FollowUser(generics.CreateAPIView):
+    serializer_class = RelationshipCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(follower=self.request.user)
+
+
+class UnfollowUser(generics.DestroyAPIView):
+    queryset = Relationship.objects.all()
+    serializer_class = RelationshipDestroySerializer
+    lookup_field = 'following__id'
+
+
+class FollowersList(generics.ListAPIView):
+    serializer_class = RelationShipRetrieveSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Relationship.objects.filter(following=user)
+
+
+class FollowingList(generics.ListAPIView):
+    serializer_class = RelationShipRetrieveSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Relationship.objects.filter(follower=user)
 
 
 # class FollowView(viewsets.ViewSet):
