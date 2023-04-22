@@ -6,7 +6,13 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from social_media.models import UserProfile
-from social_media.serializers import UserProfileSerializer, UserProfilePhotoImageSerializer, UserProfileDetailSerializer
+from social_media.serializers import (
+    UserProfilePhotoImageSerializer,
+    UserProfileCreateSerializer,
+    UserProfileRetrieveSerializer,
+    UserProfileUpdateSerializer,
+    UserProfileListSerializer,
+)
 
 
 class UserProfilesListView(mixins.ListModelMixin, GenericViewSet):
@@ -25,7 +31,7 @@ class UserProfilesListView(mixins.ListModelMixin, GenericViewSet):
         return queryset
 
     def get_serializer_class(self):
-        return UserProfileSerializer
+        return UserProfileListSerializer
 
 
 class UserProfileView(
@@ -35,21 +41,22 @@ class UserProfileView(
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
-    serializer_class = UserProfileDetailSerializer
 
-    def get_queryset(self):
-        queryset = UserProfile.objects.all()
-        return queryset
+    # TODO: Split different Serializer to different functions
 
-    #TODO: Split different Serializer to different functions
+    def get_object(self):
+        return self.request.user.profile
 
     def get_serializer_class(self):
         if self.action == "upload-image":
             return UserProfilePhotoImageSerializer
-        return self.serializer_class
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        if self.action == "create":
+            return UserProfileCreateSerializer
+        if self.action == "retrieve":
+            return UserProfileRetrieveSerializer
+        if self.action == "update":
+            return UserProfileUpdateSerializer
+        return UserProfileRetrieveSerializer
 
     @action(
         methods=["POST"],
