@@ -3,9 +3,10 @@ from django.shortcuts import render
 from rest_framework import generics, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from social_media.models import UserProfile, Relationship
+from social_media.models import UserProfile, Relationship, Post
 from social_media.serializers import (
     UserProfilePhotoImageSerializer,
     UserProfileCreateSerializer,
@@ -15,6 +16,9 @@ from social_media.serializers import (
     RelationshipCreateSerializer,
     RelationShipRetrieveSerializer,
     RelationshipDestroySerializer,
+    PostListSerializer,
+    PostCreateSerializer,
+    PostDetailSerializer,
 
 )
 
@@ -109,31 +113,36 @@ class FollowingList(generics.ListAPIView):
         user = self.request.user
         return Relationship.objects.filter(follower=user)
 
+##############################################################################
 
-# class FollowView(viewsets.ViewSet):
-#     queryset = UserProfile.objects.all()
-#
-#     def follow(self, request, pk):
-#         own_profile = UserProfile.objects.get(user=self.request.user)
-#         own_profile.following.add(
-#             pk)
-#         return Response({'message': 'now you are following'},
-#                         status=status.HTTP_200_OK)
-#
-#     def unfollow(self, request, pk):
-#         own_profile = UserProfile.objects.get(user=self.request.user)
-#         own_profile.following.remove(pk)
-#         return Response({'message': 'you are no longer following'}, status=status.HTTP_200_OK)
-#
-#
-# class UserFollowersViewSet(
-#     mixins.ListModelMixin,
-#     viewsets.GenericViewSet,
-# ):
-#     queryset = UserProfile.objects.all()
-#     serializer_class = UserProfileDetailSerializer
-#
-#     def get_queryset(self):
-#         userprofile = UserProfile.objects.get(user=self.request.user)
-#         print(type(userprofile))
-#         return self.queryset.filter(following=userprofile)
+
+class PostListView(generics.ListCreateAPIView, GenericViewSet):
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return PostCreateSerializer
+        return PostListSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class PostListFollowingView(APIView):
+    def get(self, request):
+        user_followings = Relationship.objects.filter(follower=request.user)
+        following_ids = [user_following.following_id for user_following in user_followings]
+        posts = Post.objects.filter(author_id__in=following_ids)
+        serializer = PostListSerializer(posts, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView, GenericViewSet):
+    def get_object(self):
+        return Post.objects.get(id=self.kwargs.get("pk"))
+
+    def get_serializer_class(self):
+        return PostDetailSerializer

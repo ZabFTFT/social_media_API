@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from social_media.models import UserProfile, Relationship
+from social_media.models import UserProfile, Relationship, Post
 
 
 class UserProfileListSerializer(serializers.ModelSerializer):
@@ -74,3 +74,21 @@ class RelationshipDestroySerializer(serializers.ModelSerializer):
 
 
 ##############################################################################
+
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id', 'content', 'image',)
+
+
+class PostListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ("id", "content", "image",)
+
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ("id", "content", "image",)
+

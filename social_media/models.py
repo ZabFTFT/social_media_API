@@ -13,7 +13,7 @@ def get_image_file_name(instance, filename):
     new_name_image_file = (
         f"{slugify(instance.first_name)}-{slugify(instance.last_name)}-{uuid.uuid4()}.{extension}"
     )
-    return os.path.join("uploads/movies/", new_name_image_file)
+    return os.path.join("uploads/", new_name_image_file)
 
 
 class UserProfile(models.Model):
@@ -32,6 +32,13 @@ class Relationship(models.Model):
 
     class Meta:
         unique_together = ('follower', 'following')
+
+
+class Post(models.Model):
+    content = models.TextField()
+    image = models.FileField(blank=True, null=True, upload_to='uploads/')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 
