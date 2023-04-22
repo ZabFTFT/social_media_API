@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext as _
 from django.db import models
 
+from social_media.models import UserProfile
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -40,7 +42,10 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
+    first_name = None
+    last_name = None
     email = models.EmailField(_("email address"), unique=True)
+    profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, default=None, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
