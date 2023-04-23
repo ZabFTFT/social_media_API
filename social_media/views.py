@@ -3,7 +3,7 @@ from rest_framework import generics, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from social_media.models import UserProfile, Relationship, Post
 from social_media.serializers import (
@@ -41,11 +41,7 @@ class UserProfilesListView(mixins.ListModelMixin, GenericViewSet):
 
 
 class UserProfileView(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet,
+    ModelViewSet
 ):
 
     def get_object(self):
@@ -108,7 +104,7 @@ class FollowingList(generics.ListAPIView):
 
 
 class PostListView(
-    generics.ListCreateAPIView, generics.RetrieveAPIView, GenericViewSet
+    generics.ListCreateAPIView
 ):
     @staticmethod
     def _params_to_ints(qs):
@@ -130,7 +126,7 @@ class PostListView(
         return queryset
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.request.method == "POST":
             return PostCreateSerializer
         return PostListSerializer
 
@@ -149,7 +145,7 @@ class PostListFollowingView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView, GenericViewSet):
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         return Post.objects.get(id=self.kwargs.get("pk"))
 

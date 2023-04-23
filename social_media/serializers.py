@@ -35,7 +35,7 @@ class UserProfileRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = "__all__"
-        read_only = "__all__"
+        read_only_fields = "__all__"
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class RelationShipRetrieveSerializer(serializers.ModelSerializer):
             "created_at",
             "following",
         )
-        read_only = "__all__"
+        read_only_fields = "__all__"
 
 
 class RelationshipCreateSerializer(serializers.ModelSerializer):
