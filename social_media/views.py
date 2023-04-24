@@ -1,6 +1,7 @@
 
 from rest_framework import generics, mixins, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -22,6 +23,8 @@ from social_media.serializers import (
 
 
 class UserProfilesListView(mixins.ListModelMixin, GenericViewSet):
+    permission_classes = (IsAuthenticated,)
+
     def get_queryset(self):
         queryset = UserProfile.objects.all()
         first_name = self.request.query_params.get("first_name")
@@ -43,6 +46,8 @@ class UserProfilesListView(mixins.ListModelMixin, GenericViewSet):
 class UserProfileView(
     ModelViewSet
 ):
+    permission_classes = (IsAuthenticated,)
+
 
     def get_object(self):
         return self.request.user.profile
@@ -76,12 +81,15 @@ class UserProfileView(
 
 class FollowUser(generics.CreateAPIView):
     serializer_class = RelationshipCreateSerializer
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
 
 
 class UnfollowUser(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
     queryset = Relationship.objects.all()
     serializer_class = RelationshipDestroySerializer
     lookup_field = "following__id"
@@ -89,6 +97,7 @@ class UnfollowUser(generics.DestroyAPIView):
 
 class FollowersList(generics.ListAPIView):
     serializer_class = RelationShipRetrieveSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -97,6 +106,7 @@ class FollowersList(generics.ListAPIView):
 
 class FollowingList(generics.ListAPIView):
     serializer_class = RelationShipRetrieveSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -106,6 +116,8 @@ class FollowingList(generics.ListAPIView):
 class PostListView(
     generics.ListCreateAPIView
 ):
+    permission_classes = (IsAuthenticated,)
+
     @staticmethod
     def _params_to_ints(qs):
         """Converts a list of string IDs to a list of integers"""
@@ -135,6 +147,8 @@ class PostListView(
 
 
 class PostListFollowingView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         user_followings = Relationship.objects.filter(follower=request.user)
         following_ids = [
@@ -146,6 +160,8 @@ class PostListFollowingView(APIView):
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
     def get_object(self):
         return Post.objects.get(id=self.kwargs.get("pk"))
 
