@@ -29,7 +29,7 @@ urlpatterns = [
     ),
     path("followers/", FollowersList.as_view(), name="followers"),
     path("following/", FollowingList.as_view(), name="following"),
-    path("posts/", PostListView.as_view({"post": "create"}), name="post-list"),
+    path("posts/", PostListView.as_view(), name="post-list"),
     path(
         "posts/following/",
         PostListFollowingView.as_view(),
@@ -38,12 +38,6 @@ urlpatterns = [
     path(
         "post/<int:pk>/",
         PostDetailView.as_view(
-            {
-                "get": "retrieve",
-                "put": "update",
-                "patch": "partial_update",
-                "delete": "destroy",
-            }
         ),
         name="post-detail",
     ),
